@@ -9,7 +9,7 @@ public class Pessoa {
 	private List<Endereco> enderecos;
 	private List<Telefone> telefones;
 	
-	public boolean session = true;
+	public boolean error = false;
 
 	public Pessoa() {
 		super();
@@ -40,7 +40,7 @@ public class Pessoa {
 	}
 
 	public List<Endereco> getEnderecos() {
-		if(!session) {
+		if(error) {
 			throw new RuntimeException();
 		}
 		

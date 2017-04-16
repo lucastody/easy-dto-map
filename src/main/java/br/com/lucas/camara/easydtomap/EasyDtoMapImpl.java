@@ -18,22 +18,14 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 	}
 
 	@Override
-	public Map<String, Object> toDtoMap(Object object) throws Exception {
+	public Map<String, Object> fromObject(Object object) throws Exception {
 		return map(object, null);
 	}
 
 	@Override
-	public Object[] toDtoArray(Collection<? extends Object> collection) throws Exception {
+	public Object[] fromCollection(Collection<? extends Object> collection) throws Exception {
 		return mapList(collection);
 	}
-	
-//	public static Map<String, Object> toDtoMap(Object obj) throws Exception {
-//		return map(obj, null);
-//	}
-	
-//	public static Object[] toDtoMapList(Collection<? extends Object> obj) throws Exception {
-//		return mapList(obj);
-//	}
 	
 	private Object[] mapList(Collection<? extends Object> list) throws Exception {
 		Map<Integer, Object> tmp = new HashMap<Integer, Object>();
@@ -71,14 +63,7 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 			
 			if(attributeValue != null && !getWrapperTypes().contains(attributeValue.getClass())) {
 				if(attributeValue instanceof Collection) {
-					Collection<?> collection = (Collection<?>) attributeValue;
-					List<Object> listMapping = new ArrayList<>();
-					
-					for(Object collectionItem : collection) {
-						listMapping.add(map(collectionItem, obj));
-					}
-					
-					mapping.put(name, listMapping);
+					mapping.put(name, getCollectionAttributeValue(attributeValue, obj));
 				} else {
 					mapping.put(name, map(attributeValue, obj));
 				}
@@ -87,6 +72,17 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 			}
 		}
 		return mapping;
+	}
+	
+	private List<Object> getCollectionAttributeValue(Object attributeValue, Object obj) throws Exception {
+		Collection<?> collection = (Collection<?>) attributeValue;
+		List<Object> listMapping = new ArrayList<>();
+		
+		for(Object collectionItem : collection) {
+			listMapping.add(map(collectionItem, obj));
+		}
+		
+		return listMapping;
 	}
 	
 	private Object getAttributeValue(Field field, Class<? extends Object> klass, Object obj, Object parent) {
