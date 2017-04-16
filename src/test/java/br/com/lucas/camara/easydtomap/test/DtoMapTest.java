@@ -15,6 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import br.com.lucas.camara.easydtomap.EasyDtoMap;
+import br.com.lucas.camara.easydtomap.EasyDtoMapFactory;
 import br.com.lucas.camara.easydtomap.test.pojo.Cidade;
 import br.com.lucas.camara.easydtomap.test.pojo.Endereco;
 import br.com.lucas.camara.easydtomap.test.pojo.Pessoa;
@@ -56,8 +57,11 @@ public class DtoMapTest {
 	
 	@Test
 	public void impressao_de_objeto() {
+		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
+		
 		try {
-			Map<String, Object> pessoaDTO = EasyDtoMap.toDtoMap(pessoa);
+			pessoa.session = false;
+			Map<String, Object> pessoaDTO = easyDtoMap.toDtoMap(pessoa);
 			
 			String json = gson.toJson(pessoaDTO);
 			System.out.println(json);
@@ -67,9 +71,12 @@ public class DtoMapTest {
 	}
 	
 	@Test
+	@Ignore
 	public void impressao_de_array() {
+		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
+		
 		try {
-			Object[] pessoasDTO = EasyDtoMap.toDtoMapList(pessoas);
+			Object[] pessoasDTO = easyDtoMap.toDtoArray(pessoas);
 			
 			String json = gson.toJson(pessoasDTO);
 			System.out.println(json);
@@ -80,10 +87,13 @@ public class DtoMapTest {
 		}
 	}
 	
-	@Test @Ignore
+	@Test
+	@Ignore
 	public void nome_da_pessoa_igual_a_lucas() {
+		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
+		
 		try {
-			Map<String, Object> pessoaDTO = EasyDtoMap.toDtoMap(pessoa);
+			Map<String, Object> pessoaDTO = easyDtoMap.toDtoMap(pessoa);
 			
 			JsonElement jsonTree = gson.toJsonTree(pessoaDTO);
 			JsonObject asJsonObject = jsonTree.getAsJsonObject();
@@ -95,10 +105,13 @@ public class DtoMapTest {
 		}
 	}
 	
-	@Test @Ignore
+	@Test
+	@Ignore
 	public void telefone_da_pessoa_igual_a_999998888() {
+		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
+		
 		try {
-			Map<String, Object> pessoaDTO = EasyDtoMap.toDtoMap(pessoa);
+			Map<String, Object> pessoaDTO = easyDtoMap.toDtoMap(pessoa);
 			
 			JsonElement jsonTree = gson.toJsonTree(pessoaDTO);
 			JsonObject pessoaJson = jsonTree.getAsJsonObject();

@@ -8,6 +8,8 @@ public class Pessoa {
 	private String sobrenome;
 	private List<Endereco> enderecos;
 	private List<Telefone> telefones;
+	
+	public boolean session = true;
 
 	public Pessoa() {
 		super();
@@ -38,6 +40,10 @@ public class Pessoa {
 	}
 
 	public List<Endereco> getEnderecos() {
+		if(!session) {
+			throw new RuntimeException();
+		}
+		
 		return enderecos;
 	}
 
