@@ -8,12 +8,38 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class EasyDtoMap {
 	
 	public static Map<String, Object> toDtoMap(Object obj) throws Exception {
 		return map(obj, null);
+	}
+	
+	public static Object[] toDtoMapList(List<? extends Object> obj) throws Exception {
+		return mapList(obj);
+	}
+	
+	private static Object[] mapList(Collection<? extends Object> list) throws Exception {
+		Map<Integer, Object> tmp = new HashMap<Integer, Object>();
+		int cont = 0;
+		
+		for(Object obj : list) {
+			Map<String, Object> map = map(obj, null);
+			tmp.put(cont++, map);
+		}
+		
+		Set<Entry<Integer, Object>> entrySet = tmp.entrySet();
+		Object[] listTmp = new Object[entrySet.size()];
+		cont = 0;
+		
+		for(Entry<Integer, Object> entry : tmp.entrySet()) {
+			Object value = entry.getValue();
+			listTmp[cont++] = value;
+		}
+		
+		return listTmp;
 	}
 	
 	private static Map<String, Object> map(Object obj, Object parent) throws Exception {

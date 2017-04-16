@@ -1,10 +1,12 @@
 package br.com.lucas.camara.easydtomap.test;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -20,10 +22,21 @@ import br.com.lucas.camara.easydtomap.test.pojo.Telefone;
 
 public class DtoMapTest {
 	Pessoa pessoa = null;
+	List<Pessoa> pessoas = null;
 	Gson gson = new Gson();
 	
 	@Before
-	public void init() {
+	public void inicializarArray() {
+		pessoas = new ArrayList<>();
+		
+		for(int i = 0; i < 1; i++) {
+			inicializarObjeto();
+			pessoas.add(pessoa);
+		}
+	}
+	
+	@Before
+	public void inicializarObjeto() {
 		Pessoa pessoa = new Pessoa();
 		pessoa.setId(1L);
 		pessoa.setNome("Lucas");
@@ -42,6 +55,32 @@ public class DtoMapTest {
 	}
 	
 	@Test
+	public void impressao_de_objeto() {
+		try {
+			Map<String, Object> pessoaDTO = EasyDtoMap.toDtoMap(pessoa);
+			
+			String json = gson.toJson(pessoaDTO);
+			System.out.println(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void impressao_de_array() {
+		try {
+			Object[] pessoasDTO = EasyDtoMap.toDtoMapList(pessoas);
+			
+			String json = gson.toJson(pessoasDTO);
+			System.out.println(json);
+			Assert.assertNotEquals("[]", json);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test @Ignore
 	public void nome_da_pessoa_igual_a_lucas() {
 		try {
 			Map<String, Object> pessoaDTO = EasyDtoMap.toDtoMap(pessoa);
@@ -56,7 +95,7 @@ public class DtoMapTest {
 		}
 	}
 	
-	@Test
+	@Test @Ignore
 	public void telefone_da_pessoa_igual_a_999998888() {
 		try {
 			Map<String, Object> pessoaDTO = EasyDtoMap.toDtoMap(pessoa);
