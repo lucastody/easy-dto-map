@@ -3,8 +3,23 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.lucascamara</groupId>
 	<artifactId>easy-dto-map</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>Easy DTO Mapping</name>
+	
+	<url>https://github.com/lucastody/easy-dto-map</url>
+	
+	<contributors>
+		<contributor>
+			<name>Lucas F. Câmara</name>
+			<url>https://github.com/lucastody</url>
+			<email>lfcamara.ti@gmail.com</email>
+		</contributor>
+	</contributors>
+	
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/lucastody/easy-dto-map/issues</url>
+	</issueManagement>
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
@@ -23,7 +38,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
