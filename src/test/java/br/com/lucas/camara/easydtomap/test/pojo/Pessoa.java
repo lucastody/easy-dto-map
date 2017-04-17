@@ -1,11 +1,13 @@
 package br.com.lucas.camara.easydtomap.test.pojo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class Pessoa {
 	private Long id;
 	private String nome;
 	private String sobrenome;
+	private LocalDate nascimento;
 	private List<Endereco> enderecos;
 	private List<Telefone> telefones;
 	
@@ -57,6 +59,14 @@ public class Pessoa {
 
 	public void setTelefones(List<Telefone> telefones) {
 		this.telefones = telefones;
+	}
+	
+	public LocalDate getNascimento() {
+		return nascimento;
+	}
+
+	public void setNascimento(LocalDate nascimento) {
+		this.nascimento = nascimento;
 	}
 
 	@Override

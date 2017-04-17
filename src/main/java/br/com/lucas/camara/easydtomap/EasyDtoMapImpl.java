@@ -13,6 +13,8 @@ import java.util.Set;
 
 public class EasyDtoMapImpl implements EasyDtoMap {
 	
+	private Map<Class, TypeConverter> converters = new HashMap<>();
+	
 	EasyDtoMapImpl() {
 		super();
 	}
@@ -61,14 +63,18 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 			String name = field.getName();
 			Object attributeValue = getAttributeValue(field, klass, obj, parent);
 			
-			if(attributeValue != null && !getWrapperTypes().contains(attributeValue.getClass())) {
-				if(attributeValue instanceof Collection) {
-					mapping.put(name, getCollectionAttributeValue(attributeValue, obj));
-				} else {
-					mapping.put(name, map(attributeValue, obj));
-				}
+			if(attributeValue == null) {
+				continue;
+			}
+			
+			if(attributeValue instanceof Collection) {
+				mapping.put(name, getCollectionAttributeValue(attributeValue, obj));
 			} else {
-				mapping.put(name, attributeValue);
+				if(!getWrapperTypes().contains(attributeValue.getClass())) {
+					mapping.put(name, map(attributeValue, obj));
+				} else {
+					mapping.put(name, attributeValue);
+				}
 			}
 		}
 		return mapping;
@@ -106,6 +112,12 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 			return null;
 		}
 		
+		TypeConverter<Object> converter = null;
+		if((converter = converters.get(result.getClass())) != null) {
+			Object convertedValue = result.getClass().cast(result);
+			return converter.convertNew(convertedValue);
+		}
+		
 		return result;
 	}
 	
@@ -130,5 +142,10 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 		ret.add(String.class);
 		
 		return ret;
+	}
+	
+	@Override
+	public <T> void addTypeConverter(Class<T> klass, TypeConverter<T> converter) {
+		converters.put(klass, converter);
 	}
 }

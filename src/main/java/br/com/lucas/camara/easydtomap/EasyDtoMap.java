@@ -9,4 +9,6 @@ public interface EasyDtoMap {
 	
 	Object[] fromCollection(Collection<? extends Object> collection) throws Exception;
 	
+	<T> void addTypeConverter(Class<T> class1, TypeConverter<T> localDateConverter);
+	
 }

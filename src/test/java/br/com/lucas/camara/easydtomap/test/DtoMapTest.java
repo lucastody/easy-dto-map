@@ -1,5 +1,8 @@
 package br.com.lucas.camara.easydtomap.test;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +21,7 @@ import com.google.gson.JsonObject;
 
 import br.com.lucas.camara.easydtomap.EasyDtoMap;
 import br.com.lucas.camara.easydtomap.EasyDtoMapFactory;
+import br.com.lucas.camara.easydtomap.TypeConverter;
 import br.com.lucas.camara.easydtomap.test.pojo.Cidade;
 import br.com.lucas.camara.easydtomap.test.pojo.Endereco;
 import br.com.lucas.camara.easydtomap.test.pojo.Pessoa;
@@ -44,6 +48,7 @@ public class DtoMapTest {
 		pessoa.setId(1L);
 		pessoa.setNome("Fulano");
 		pessoa.setSobrenome("Tal");
+		pessoa.setNascimento(LocalDate.of(1987, 4, 28));
 		
 		Cidade cidade1 = new Cidade(1L, "Nome da Cidade");
 		
@@ -85,6 +90,22 @@ public class DtoMapTest {
 	
 	@Test
 //	@Ignore
+	public void cria_dto_de_colecao() {
+		LOGGER.info("cria_dto_de_colecao");
+		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
+		
+		try {
+			Object[] pessoasDTO = easyDtoMap.fromCollection(pessoas);
+			imprimirJson(pessoasDTO);
+			Assert.assertNotNull(pessoasDTO);
+		} catch (Exception e) {
+			log(e);
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+//	@Ignore
 	public void cria_dto_de_objeto_simulando_erro_ao_recuperar_enderecos() {
 		LOGGER.info("cria_dto_de_objeto_simulando_sessao_fechada_ao_recuperar_enderecos");
 		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
@@ -94,22 +115,6 @@ public class DtoMapTest {
 			Map<String, Object> pessoaDTO = easyDtoMap.fromObject(pessoa);
 			imprimirJson(pessoaDTO);
 			Assert.assertNotNull(pessoaDTO);
-		} catch (Exception e) {
-			log(e);
-			Assert.fail(e.getMessage());
-		}
-	}
-	
-	@Test
-//	@Ignore
-	public void cria_dto_de_colecao() {
-		LOGGER.info("cria_dto_de_colecao");
-		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
-		
-		try {
-			Object[] pessoasDTO = easyDtoMap.fromCollection(pessoas);
-			imprimirJson(pessoasDTO);
-			Assert.assertNotNull(pessoasDTO);
 		} catch (Exception e) {
 			log(e);
 			Assert.fail(e.getMessage());
@@ -151,6 +156,29 @@ public class DtoMapTest {
 			
 			JsonObject telefone1 = jsonTelefonesArray.get(0).getAsJsonObject();
 			Assert.assertEquals("999998888", telefone1.get("numero").getAsString());
+		} catch (Exception e) {
+			log(e);
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+//	@Ignore
+	public void cria_dto_de_objeto_usando_type_converter_para_localdate() {
+		LOGGER.info("cria_dto_de_objeto_usando_type_converter_para_localdate");
+		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
+		
+		easyDtoMap.addTypeConverter(LocalDate.class, new TypeConverter<LocalDate>() {
+			public Object convertNew(LocalDate value) {
+				Instant instant = value.atStartOfDay(ZoneId.systemDefault()).toInstant();
+				return instant.toEpochMilli();
+			}
+		});
+		
+		try {
+			Map<String, Object> pessoaDTO = easyDtoMap.fromObject(pessoa);
+			imprimirJson(pessoaDTO);
+			Assert.assertNotNull(pessoaDTO);
 		} catch (Exception e) {
 			log(e);
 			Assert.fail(e.getMessage());
