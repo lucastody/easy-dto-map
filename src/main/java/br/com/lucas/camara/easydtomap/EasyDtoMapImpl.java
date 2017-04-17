@@ -1,7 +1,6 @@
 package br.com.lucas.camara.easydtomap;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,6 +66,8 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 				continue;
 			}
 			
+			System.out.println(name);
+			
 			if(attributeValue instanceof Collection) {
 				mapping.put(name, getCollectionAttributeValue(attributeValue, obj));
 			} else {
@@ -92,19 +93,12 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 	}
 	
 	private Object getAttributeValue(Field field, Class<? extends Object> klass, Object obj, Object parent) {
-		Method method = null;
 		Object result = null;
 		
 		try {
-			method = klass.getMethod(getMethodName(field));
-		} catch (NoSuchMethodException | SecurityException e) {
-			return null;
-		}
-		
-		
-		try {
-			result = method.invoke(obj);
-		} catch(Exception ex) {
+			field.setAccessible(true);
+			result = field.get(obj);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
 			return null;
 		}
 		
@@ -121,13 +115,6 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 		return result;
 	}
 	
-	private String getMethodName(Field field) {
-		String name = field.getName();
-		Character firstChar = Character.toUpperCase(name.charAt(0));
-		String methodName = name.substring(1, name.length());
-		return "get" + firstChar + methodName;
-	}
-
 	private Set<Class<?>> getWrapperTypes() {
 		Set<Class<?>> ret = new HashSet<Class<?>>();
 		ret.add(Boolean.class);
