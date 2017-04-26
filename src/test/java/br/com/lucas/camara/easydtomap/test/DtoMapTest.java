@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -36,6 +35,30 @@ public class DtoMapTest {
 	private Pessoa pessoa = null;
 	private List<Pessoa> pessoas = null;
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private static EasyDtoMap easyDtoMap = null;
+	
+	static {
+		easyDtoMap = EasyDtoMapFactory.create();
+		
+		easyDtoMap.addTypeConverter(LocalDate.class, new TypeConverter<LocalDate>() {
+			public Object convertNew(LocalDate value) {
+				Instant instant = value.atStartOfDay(ZoneId.systemDefault()).toInstant();
+				return instant.toEpochMilli();
+			}
+		});
+		
+		easyDtoMap.addTypeConverter(Date.class, new TypeConverter<Date>() {
+			public Object convertNew(Date value) {
+				return value.getTime();
+			}
+		});
+		
+		easyDtoMap.addTypeConverter(Boolean.class, new TypeConverter<Boolean>() {
+			public Object convertNew(Boolean value) {
+				return value ? "Sim" : "Não";
+			}
+		});
+	}
 	
 	private void log(Throwable throwable) {
 		LOGGER.log(Level.SEVERE, throwable.getMessage(), throwable);
@@ -76,10 +99,9 @@ public class DtoMapTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void cria_dto_de_objeto() {
 		LOGGER.info("cria_dto_de_objeto");
-		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
 		
 		try {
 			Map<String, Object> pessoaDTO = easyDtoMap.fromObject(pessoa);
@@ -92,10 +114,9 @@ public class DtoMapTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void cria_dto_de_colecao() {
 		LOGGER.info("cria_dto_de_colecao");
-		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
 		
 		try {
 			Object[] pessoasDTO = easyDtoMap.fromCollection(pessoas);
@@ -108,10 +129,9 @@ public class DtoMapTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void cria_dto_de_objeto_simulando_erro_ao_recuperar_enderecos() {
 		LOGGER.info("cria_dto_de_objeto_simulando_sessao_fechada_ao_recuperar_enderecos");
-		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
 		
 		try {
 			pessoa.error = true;
@@ -125,10 +145,9 @@ public class DtoMapTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void nome_da_pessoa_igual_a_Fulano() {
 		LOGGER.info("nome_da_pessoa_igual_a_Fulano");
-		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
 		
 		try {
 			Map<String, Object> pessoaDTO = easyDtoMap.fromObject(pessoa);
@@ -144,10 +163,9 @@ public class DtoMapTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void telefone_da_pessoa_igual_a_999998888() {
 		LOGGER.info("telefone_da_pessoa_igual_a_999998888");
-		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
 		
 		try {
 			Map<String, Object> pessoaDTO = easyDtoMap.fromObject(pessoa);
@@ -166,17 +184,9 @@ public class DtoMapTest {
 	}
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void cria_dto_de_objeto_usando_type_converter_para_localdate() {
 		LOGGER.info("cria_dto_de_objeto_usando_type_converter_para_localdate");
-		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
-		
-		easyDtoMap.addTypeConverter(LocalDate.class, new TypeConverter<LocalDate>() {
-			public Object convertNew(LocalDate value) {
-				Instant instant = value.atStartOfDay(ZoneId.systemDefault()).toInstant();
-				return instant.toEpochMilli();
-			}
-		});
 		
 		try {
 			Map<String, Object> pessoaDTO = easyDtoMap.fromObject(pessoa);
@@ -192,19 +202,6 @@ public class DtoMapTest {
 //	@Ignore
 	public void cria_dto_de_objeto_com_tipos_primitivos() {
 		LOGGER.info("cria_dto_de_objeto_com_tipos_primitivos");
-		EasyDtoMap easyDtoMap = EasyDtoMapFactory.create();
-		
-		easyDtoMap.addTypeConverter(Date.class, new TypeConverter<Date>() {
-			public Object convertNew(Date value) {
-				return value.getTime();
-			}
-		});
-		
-		easyDtoMap.addTypeConverter(Boolean.class, new TypeConverter<Boolean>() {
-			public Object convertNew(Boolean value) {
-				return value ? "Sim" : "Não";
-			}
-		});
 		
 		Sistema sistema = new Sistema();
 		sistema.setAtivo(true);

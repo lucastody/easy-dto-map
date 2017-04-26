@@ -66,8 +66,6 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 				continue;
 			}
 			
-			System.out.println(name);
-			
 			if(attributeValue instanceof Collection) {
 				mapping.put(name, getCollectionAttributeValue(attributeValue, obj));
 			} else {
@@ -103,6 +101,10 @@ public class EasyDtoMapImpl implements EasyDtoMap {
 		}
 		
 		if(result == parent) {
+			return null;
+		}
+		
+		if(result == null) {
 			return null;
 		}
 		
