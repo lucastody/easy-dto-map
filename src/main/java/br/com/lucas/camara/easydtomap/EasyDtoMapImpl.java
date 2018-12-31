@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class EasyDtoMapImpl implements EasyDtoMap {
+class EasyDtoMapImpl implements EasyDtoMap {
 	
 	private Map<Class, TypeConverter> converters = new HashMap<>();
 	
